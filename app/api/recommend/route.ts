@@ -45,7 +45,5 @@ Focus on well-regarded books across different eras and subgenres.`,
     }),
   });
 
-  console.log("LOG:result:", result);
-
   return Response.json(result.output.recommendations);
 }

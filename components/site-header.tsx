@@ -9,9 +9,7 @@ export function SiteHeader() {
           <div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-foreground bg-secondary">
             <BookOpen className="h-5 w-5 text-foreground" />
           </div>
-          <span className="font-serif text-2xl text-foreground">
-            Shelf Life
-          </span>
+          <span className="font-serif text-2xl text-foreground">Epilogue</span>
         </Link>
         <nav className="flex items-center gap-4">
           <Link
