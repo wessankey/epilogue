@@ -39,9 +39,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
         ))}
       </div>
 
-      <p className="text-sm leading-relaxed text-muted-foreground">
-        {rec.description}
-      </p>
+      <p className="text-sm leading-relaxed">{rec.description}</p>
 
       <div className="mt-auto flex items-start gap-2 rounded-lg border-2 border-foreground/20 bg-muted p-3">
         <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-foreground" />

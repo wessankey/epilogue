@@ -11,7 +11,7 @@ const dmSerif = DM_Serif_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Shelf Life - Book Recommendations",
+  title: "Epilogue - Book Recommendations",
   description:
     "Discover your next favorite book. Get personalized AI-powered recommendations based on what you love to read.",
 };
