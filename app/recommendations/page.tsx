@@ -76,36 +76,8 @@ function RecommendationsContent() {
         throw new Error("Failed to get recommendations");
       }
 
-      const reader = response.body?.getReader();
-      if (!reader) throw new Error("No response stream");
-
-      const decoder = new TextDecoder();
-      let accumulated = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        accumulated += decoder.decode(value, { stream: true });
-
-        try {
-          const parsed = JSON.parse(accumulated);
-          if (parsed?.recommendations) {
-            setRecommendations(parsed.recommendations);
-          }
-        } catch {
-          // Partial JSON, keep accumulating
-        }
-      }
-
-      // Final parse
-      try {
-        const parsed = JSON.parse(accumulated);
-        if (parsed?.recommendations) {
-          setRecommendations(parsed.recommendations);
-        }
-      } catch {
-        throw new Error("Failed to parse recommendations");
-      }
+      const recommendations = await response.json();
+      setRecommendations(recommendations);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
