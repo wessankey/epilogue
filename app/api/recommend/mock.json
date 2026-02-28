@@ -1,0 +1,50 @@
+[
+  {
+    "title": "The Name of the Wind",
+    "author": "Patrick Rothfuss",
+    "year": 2007,
+    "tags": ["fantasy", "coming-of-age", "adventure", "magic"],
+    "description": "An epic tale of a legendary hero telling his own story, filled with beautiful prose and intricate world-building that will keep you turning pages.",
+    "reason": "Shares the same blend of rich world-building and a compelling protagonist driven by curiosity and talent."
+  },
+  {
+    "title": "Piranesi",
+    "author": "Susanna Clarke",
+    "year": 2020,
+    "tags": ["fantasy", "mystery", "surreal", "literary"],
+    "description": "A man lives in a labyrinthine house filled with statues and tides, slowly unraveling the secrets of his strange reality in this mesmerizing puzzle of a novel.",
+    "reason": "Offers the same sense of mystery and discovery, with an unreliable narrator piecing together a surprising truth."
+  },
+  {
+    "title": "Anxious People",
+    "author": "Fredrik Backman",
+    "year": 2019,
+    "tags": ["literary fiction", "humor", "drama", "contemporary"],
+    "description": "A botched bank robbery leads to a hostage situation in an apartment showing, weaving together the deeply human stories of everyone involved.",
+    "reason": "Delivers the same emotional depth and ensemble cast, where flawed characters reveal surprising humanity."
+  },
+  {
+    "title": "Mexican Gothic",
+    "author": "Silvia Moreno-Garcia",
+    "year": 2020,
+    "tags": ["gothic", "horror", "historical", "mystery"],
+    "description": "A glamorous socialite travels to a crumbling mansion in the Mexican countryside to rescue her cousin and uncovers a dark, centuries-old secret.",
+    "reason": "Shares the same atmospheric tension and a sharp-witted protagonist uncovering sinister secrets."
+  },
+  {
+    "title": "The Martian",
+    "author": "Andy Weir",
+    "year": 2011,
+    "tags": ["science fiction", "survival", "humor", "thriller"],
+    "description": "An astronaut is stranded alone on Mars and must use science and ingenuity to survive until a rescue mission can reach him, told with wit and technical precision.",
+    "reason": "Delivers the same page-turning plot and a resourceful protagonist solving problems under pressure."
+  },
+  {
+    "title": "Eleanor Oliphant Is Completely Fine",
+    "author": "Gail Honeyman",
+    "year": 2017,
+    "tags": ["literary fiction", "contemporary", "dark humor", "redemption"],
+    "description": "A deeply lonely woman with a painful past navigates modern life with rigid routines until an unexpected friendship begins to crack open her carefully constructed world.",
+    "reason": "Shares the same darkly comic voice and a deeply compelling character whose inner life slowly reveals itself."
+  }
+]

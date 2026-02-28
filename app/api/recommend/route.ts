@@ -1,5 +1,6 @@
 import { generateText, Output } from "ai";
 import { z } from "zod";
+import mockRecommendations from "./mock.json";
 
 export const maxDuration = 30;
 
@@ -28,6 +29,10 @@ const recommendationSchema = z.object({
 
 export async function POST(req: Request) {
   const { book } = await req.json();
+
+  if (process.env.USE_MOCK_DATA === "true") {
+    return Response.json(mockRecommendations);
+  }
 
   const result = await generateText({
     model: "openai/gpt-5-mini",
