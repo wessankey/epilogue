@@ -27,8 +27,48 @@ const recommendationSchema = z.object({
   ),
 });
 
+function buildPrompt(
+  book: string,
+  age: string,
+  genre: string,
+  similarity: number,
+): string {
+  const ageConstraint =
+    age === "new"
+      ? "Only recommend books published within the last 30 years."
+      : age === "classic"
+        ? "Only recommend books published more than 30 years ago."
+        : "";
+
+  const genreConstraint =
+    genre === "fiction"
+      ? "Only recommend fiction books."
+      : genre === "nonfiction"
+        ? "Only recommend nonfiction books."
+        : "";
+
+  const similarityGuidance =
+    similarity <= 2
+      ? "Feel free to explore widely — recommend books that share loose thematic or tonal qualities but may be quite different in style, setting, or genre."
+      : similarity === 3
+        ? "Recommend books that share notable thematic, stylistic, or tonal qualities with the input book."
+        : similarity === 4
+          ? "Stick closely to the input book's themes, style, and tone. Recommendations should feel like natural next reads for fans of this specific book."
+          : "Recommend books that are very tightly similar to the input book — same genre, similar themes, comparable writing style. Fans should feel the recommendations are nearly identical in spirit.";
+
+  const constraints = [ageConstraint, genreConstraint]
+    .filter(Boolean)
+    .join(" ");
+
+  return `You are an expert book recommender. The user loved reading "${book}".
+Suggest 6 books they would likely enjoy next.
+${similarityGuidance}
+${constraints}
+Focus on well-regarded books. Do not re-suggest the input book itself.`.trim();
+}
+
 export async function POST(req: Request) {
-  const { book } = await req.json();
+  const { book, age = "any", genre = "any", similarity = 3 } = await req.json();
 
   if (process.env.USE_MOCK_DATA === "true") {
     return Response.json(mockRecommendations);
@@ -36,10 +76,7 @@ export async function POST(req: Request) {
 
   const result = await generateText({
     model: "openai/gpt-5-mini",
-    prompt: `You are an expert book recommender. The user loved reading "${book}". 
-Suggest 6 books they would likely enjoy next. 
-Choose a diverse set of recommendations that share thematic, stylistic, or tonal qualities with the input book.
-Focus on well-regarded books across different eras and subgenres.`,
+    prompt: buildPrompt(book, age, genre, similarity),
     output: Output.object({
       schema: recommendationSchema,
     }),

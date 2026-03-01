@@ -43,9 +43,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
 
       <div className="mt-auto flex items-start gap-2 rounded-lg border-2 border-foreground/20 bg-muted p-3">
         <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-foreground" />
-        <p className="text-xs leading-relaxed text-muted-foreground">
-          {rec.reason}
-        </p>
+        <p className="text-xs leading-relaxed">{rec.reason}</p>
       </div>
     </div>
   );
@@ -54,34 +52,40 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
 function RecommendationsContent() {
   const searchParams = useSearchParams();
   const book = searchParams.get("book");
+  const age = searchParams.get("age") ?? "any";
+  const genre = searchParams.get("genre") ?? "any";
+  const similarity = Number(searchParams.get("similarity") ?? "3");
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchRecommendations = useCallback(async (bookTitle: string) => {
-    setLoading(true);
-    setError(null);
-    setRecommendations([]);
+  const fetchRecommendations = useCallback(
+    async (bookTitle: string) => {
+      setLoading(true);
+      setError(null);
+      setRecommendations([]);
 
-    try {
-      const response = await fetch("/api/recommend", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ book: bookTitle }),
-      });
+      try {
+        const response = await fetch("/api/recommend", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ book: bookTitle, age, genre, similarity }),
+        });
 
-      if (!response.ok) {
-        throw new Error("Failed to get recommendations");
+        if (!response.ok) {
+          throw new Error("Failed to get recommendations");
+        }
+
+        const recommendations = await response.json();
+        setRecommendations(recommendations);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Something went wrong");
+      } finally {
+        setLoading(false);
       }
-
-      const recommendations = await response.json();
-      setRecommendations(recommendations);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [age, genre, similarity],
+  );
 
   useEffect(() => {
     if (book) {

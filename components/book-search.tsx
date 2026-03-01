@@ -2,23 +2,46 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, ArrowRight } from "lucide-react";
+import { Search, ArrowRight, SlidersHorizontal } from "lucide-react";
 import { suggestions } from "@/lib/books-data";
+import {
+  SettingsModal,
+  defaultSettings,
+  type SearchSettings,
+} from "@/components/settings-modal";
+
+function isCustomized(settings: SearchSettings) {
+  return (
+    settings.bookAge !== defaultSettings.bookAge ||
+    settings.genre !== defaultSettings.genre ||
+    settings.similarity !== defaultSettings.similarity
+  );
+}
 
 export function BookSearch() {
   const [query, setQuery] = useState("");
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settings, setSettings] = useState<SearchSettings>(defaultSettings);
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      router.push(`/recommendations?book=${encodeURIComponent(query.trim())}`);
+      const params = new URLSearchParams({
+        book: query.trim(),
+        age: settings.bookAge,
+        genre: settings.genre,
+        similarity: String(settings.similarity),
+      });
+      router.push(`/recommendations?${params.toString()}`);
     }
   };
 
   const handleSuggestionClick = (suggestion: string) => {
     setQuery(suggestion);
   };
+
+  const customized = isCustomized(settings);
 
   return (
     <section className="flex flex-col items-center gap-8 px-6 py-16 md:py-24">
@@ -45,13 +68,34 @@ export function BookSearch() {
             className="h-14 w-full rounded-xl border-3 border-foreground bg-card pl-12 pr-4 text-lg font-medium text-card-foreground shadow-[4px_4px_0_0_var(--foreground)] outline-none transition-all placeholder:text-muted-foreground focus:shadow-[6px_6px_0_0_var(--foreground)] focus:-translate-x-0.5 focus:-translate-y-0.5"
           />
         </div>
-        <button
-          type="submit"
-          className="flex h-14 items-center justify-center gap-2 rounded-xl border-3 border-foreground bg-secondary px-6 text-lg font-bold text-secondary-foreground shadow-[4px_4px_0_0_var(--foreground)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--foreground)] active:translate-y-0 active:shadow-[2px_2px_0_0_var(--foreground)]"
-        >
-          Recommend
-          <ArrowRight className="h-5 w-5" />
-        </button>
+
+        <div className="flex gap-2">
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(true)}
+              title="Search settings"
+              className={`relative flex h-14 w-14 items-center justify-center rounded-xl border-3 border-foreground shadow-[4px_4px_0_0_var(--foreground)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--foreground)] active:translate-y-0 active:shadow-[2px_2px_0_0_var(--foreground)] ${
+                customized
+                  ? "bg-foreground text-background"
+                  : "bg-card text-foreground"
+              }`}
+            >
+              <SlidersHorizontal className="h-5 w-5" />
+              {customized && (
+                <span className="absolute -right-1 -top-1 flex h-3 w-3 items-center justify-center rounded-full bg-secondary border-2 border-foreground" />
+              )}
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            className="flex h-14 flex-1 items-center justify-center gap-2 rounded-xl border-3 border-foreground bg-secondary px-6 text-lg font-bold text-secondary-foreground shadow-[4px_4px_0_0_var(--foreground)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--foreground)] active:translate-y-0 active:shadow-[2px_2px_0_0_var(--foreground)]"
+          >
+            Recommend
+            <ArrowRight className="h-5 w-5" />
+          </button>
+        </div>
       </form>
 
       <div className="flex flex-wrap justify-center gap-2">
@@ -66,6 +110,13 @@ export function BookSearch() {
           </button>
         ))}
       </div>
+
+      <SettingsModal
+        open={settingsOpen}
+        settings={settings}
+        onChange={setSettings}
+        onClose={() => setSettingsOpen(false)}
+      />
     </section>
   );
 }

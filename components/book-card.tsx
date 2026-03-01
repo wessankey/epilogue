@@ -22,7 +22,7 @@ export function BookCard({ book }: BookCardProps) {
         {book.tags.map((tag) => (
           <span
             key={tag}
-            className="rounded-full border-2 border-foreground bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground"
+            className="rounded-full border-2 border-foreground bg-secondary px-2.5 py-0.5 text-xs font-semibold text-secondary-foreground cursor-default"
           >
             {tag}
           </span>
