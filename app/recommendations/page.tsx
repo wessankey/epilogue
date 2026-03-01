@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Loader2, BookOpen, Sparkles } from "lucide-react";
@@ -58,40 +58,33 @@ function RecommendationsContent() {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const fetchRecommendations = useCallback(
-    async (bookTitle: string) => {
-      setLoading(true);
-      setError(null);
-      setRecommendations([]);
-
-      try {
-        const response = await fetch("/api/recommend", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ book: bookTitle, age, genre, similarity }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to get recommendations");
-        }
-
-        const recommendations = await response.json();
-        setRecommendations(recommendations);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Something went wrong");
-      } finally {
-        setLoading(false);
-      }
-    },
-    [age, genre, similarity],
-  );
+  const [retryCount, setRetryCount] = useState(0);
+  const fetchedRef = useRef(false);
 
   useEffect(() => {
-    if (book) {
-      fetchRecommendations(book);
-    }
-  }, [book, fetchRecommendations]);
+    if (!book) return;
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+
+    setLoading(true);
+    setError(null);
+    setRecommendations([]);
+
+    fetch("/api/recommend", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ book, age, genre, similarity }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to get recommendations");
+        return res.json();
+      })
+      .then((recs) => setRecommendations(recs))
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Something went wrong");
+      })
+      .finally(() => setLoading(false));
+  }, [book, age, genre, similarity, retryCount]);
 
   if (!book) {
     return (
@@ -160,7 +153,10 @@ function RecommendationsContent() {
             <p className="mt-1 text-sm text-muted-foreground">{error}</p>
           </div>
           <button
-            onClick={() => fetchRecommendations(book)}
+            onClick={() => {
+              fetchedRef.current = false;
+              setRetryCount((c) => c + 1);
+            }}
             className="rounded-xl border-3 border-foreground bg-secondary px-6 py-3 font-bold text-secondary-foreground shadow-[4px_4px_0_0_var(--foreground)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--foreground)]"
           >
             Try Again
