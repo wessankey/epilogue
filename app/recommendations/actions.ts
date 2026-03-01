@@ -1,8 +1,9 @@
+"use server";
+
+import { openai } from "@ai-sdk/openai";
 import { generateText, Output } from "ai";
 import { z } from "zod";
-import mockRecommendations from "./mock.json";
-
-export const maxDuration = 30;
+import mockRecommendations from "../api/recommend/mock.json";
 
 const recommendationSchema = z.object({
   recommendations: z.array(
@@ -67,20 +68,23 @@ ${constraints}
 Focus on well-regarded books. Do not re-suggest the input book itself.`.trim();
 }
 
-export async function POST(req: Request) {
-  const { book, age = "any", genre = "any", similarity = 3 } = await req.json();
-
+export async function getRecommendations(
+  book: string,
+  age: string = "any",
+  genre: string = "any",
+  similarity: number = 3,
+) {
   if (process.env.USE_MOCK_DATA === "true") {
-    return Response.json(mockRecommendations);
+    return mockRecommendations;
   }
 
   const result = await generateText({
-    model: "openai/gpt-5-mini",
+    model: openai("gpt-4o-mini"),
     prompt: buildPrompt(book, age, genre, similarity),
     output: Output.object({
       schema: recommendationSchema,
     }),
   });
 
-  return Response.json(result.output.recommendations);
+  return result.output.recommendations;
 }

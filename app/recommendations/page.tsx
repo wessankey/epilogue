@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, Loader2, BookOpen, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { getRecommendations } from "./actions";
 
 interface Recommendation {
   title: string;
@@ -70,15 +71,7 @@ function RecommendationsContent() {
     setError(null);
     setRecommendations([]);
 
-    fetch("/api/recommend", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ book, age, genre, similarity }),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to get recommendations");
-        return res.json();
-      })
+    getRecommendations(book, age, genre, similarity)
       .then((recs) => setRecommendations(recs))
       .catch((err) => {
         setError(err instanceof Error ? err.message : "Something went wrong");
