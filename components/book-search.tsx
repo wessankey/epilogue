@@ -75,7 +75,7 @@ export function BookSearch() {
               type="button"
               onClick={() => setSettingsOpen(true)}
               title="Search settings"
-              className={`relative flex h-14 w-14 items-center justify-center rounded-xl border-3 border-foreground shadow-[4px_4px_0_0_var(--foreground)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--foreground)] active:translate-y-0 active:shadow-[2px_2px_0_0_var(--foreground)] ${
+              className={`relative flex h-14 w-14 items-center justify-center rounded-xl border-3 border-foreground shadow-[4px_4px_0_0_var(--foreground)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--foreground)] active:translate-y-0 active:shadow-[2px_2px_0_0_var(--foreground)] cursor-pointer ${
                 customized
                   ? "bg-foreground text-background"
                   : "bg-card text-foreground"
@@ -90,7 +90,7 @@ export function BookSearch() {
 
           <button
             type="submit"
-            className="flex h-14 flex-1 items-center justify-center gap-2 rounded-xl border-3 border-foreground bg-secondary px-6 text-lg font-bold text-secondary-foreground shadow-[4px_4px_0_0_var(--foreground)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--foreground)] active:translate-y-0 active:shadow-[2px_2px_0_0_var(--foreground)]"
+            className="flex h-14 flex-1 items-center justify-center gap-2 rounded-xl border-3 border-foreground bg-secondary px-6 text-lg font-bold text-secondary-foreground shadow-[4px_4px_0_0_var(--foreground)] transition-all hover:-translate-y-1 hover:shadow-[6px_6px_0_0_var(--foreground)] active:translate-y-0 active:shadow-[2px_2px_0_0_var(--foreground)] cursor-pointer"
           >
             Recommend
             <ArrowRight className="h-5 w-5" />
@@ -98,8 +98,8 @@ export function BookSearch() {
         </div>
       </form>
 
-      <div className="flex flex-wrap justify-center gap-2">
-        <span className="text-sm text-muted-foreground">Try:</span>
+      <div className="flex flex-wrap justify-center gap-2 items-center">
+        <span className="text-sm text-muted-foreground font-bold">Try:</span>
         {suggestions.map((suggestion) => (
           <button
             key={suggestion}
